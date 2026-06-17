@@ -12,13 +12,14 @@
 local _M = {}
 
 local log = require("lapis.logging")
+local bint = require("bint")(256)
 
 --- 读取n个chunk
 --- @public
---- @param n? integer 需要读取的chunk数量
+--- @param n? bint 需要读取的chunk数量
 --- @return string 读取到的数据
 function _M:read(n)
-    n = n or 1
+    n = n or bint.frominteger(1)
     if n > self.size then
         error("Rng buffer: requested chunks exceed buffer size")
     end
@@ -27,9 +28,9 @@ function _M:read(n)
         log.notice("Rng buffer is low, filling...")
         self:fill_to_full() -- 不够读完，直接填充缓冲区
     end
-    for _ = 1, n do
-        table.insert(chunks, self.buffer[#self.buffer]) -- 从tail读取
-        table.remove(self.buffer)                       -- 读取后移除chunk
+    while #chunks < n do
+        table.insert(chunks, self.buffer[#self.buffer])
+        table.remove(self.buffer)
     end
     -- 如果低于低水位线时，需要填充
     if #self.buffer < self.low_watermark then
@@ -71,7 +72,7 @@ function _M:fill()
             end
         end
     end
-    log.notice("Filled %d chunks", filled_chunks)
+    log.notice("Filled " .. filled_chunks .. " chunks")
     return fullfilled
 end
 
@@ -101,6 +102,7 @@ local function new(size, chunk_size, dev_path)
         },
         { __index = _M }
     )
+    log.notice("Warming up rng buffer with " .. dev_path)
     new_ring:fill_to_full()
     return new_ring
 end
