@@ -30,8 +30,8 @@ function _M.random_number(lower, upper)
         error("input out of range")
     end
     local total_bytes = need_chunks * config.chunk_size
-    local max_val = bint(2) ^ (total_bytes * 8) -- 2^(8*total_bytes)
-    local limit = (max_val // range) * range    -- 安全区间上界
+    local max_val = bint.one() << (total_bytes * 8) -- 2^(8*total_bytes)
+    local limit = (max_val // range) * range        -- 安全区间上界
     local raw_random = nil
     local retry = -1
     repeat
@@ -40,8 +40,6 @@ function _M.random_number(lower, upper)
         )
         retry = retry + 1
     until raw_random < limit -- 直到落在接受区
-    log.notice("need_chunks: " .. tostring(need_chunks))
-    log.notice("Retry times: " .. retry)
     return raw_random % range + lower
 end
 
