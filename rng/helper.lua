@@ -14,14 +14,12 @@ function _M.need_chunks(range)
     if range <= 1 then
         return bint.zero()
     end
-    local chunks = bint.zero()
-    while bint.ispos(range) do
+    local chunks = bint.one()
+    local bits_per_chunk = config.chunk_size * 8
+    -- 计算需要多少个 chunk 才能覆盖 range
+    -- 使用左移构造阈值 2^(chunks*bits_per_chunk)，避免右移导致 bint 降级为 number
+    while range > (bint.one() << (chunks * bits_per_chunk)) do
         chunks = chunks + 1
-        range = range >> (config.chunk_size * 8)
-    end
-    log.notice("Need " .. tostring(chunks) .. " chunks")
-    if bint.iszero(chunks) then
-        chunks = bint.one()
     end
     return chunks
 end
