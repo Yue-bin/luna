@@ -23,4 +23,16 @@ function _M.need_chunks(range, chunk_size)
     return chunks
 end
 
+--- 从buffer转到hex
+--- @param buffer string rngbuffer返回的数据
+--- @return string hex 转换后的hex
+function _M.buffer_to_hex(buffer)
+    return (
+        buffer:gsub(".",
+            function(char)
+                return string.format("%02x", string.byte(char))
+            end)
+    )
+end
+
 return _M

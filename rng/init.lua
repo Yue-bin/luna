@@ -37,6 +37,24 @@ function _M:random_number(lower, upper)
     return raw_random % range + lower
 end
 
+--- 生成给定长度的随机hex字符串
+--- @param length integer 生成的随机字符串长度
+--- @return string 生成的随机字符串
+function _M:random_hex(length)
+    if length <= 0 then
+        error("Length must be greater than 0")
+    end
+    -- 1 hex = 4 bits = 0.5 bytes
+    local need_chunks = math.ceil(length * 0.5)
+    local raw_hex = helper.buffer_to_hex(
+        self.rng_buffer:read(need_chunks)
+    )
+    if not raw_hex then
+        error("Failed to generate random hex")
+    end
+    return raw_hex:sub(1, length)
+end
+
 --- 实例化一个rng池实例
 --- @param config PoolConfig
 --- @return Rng 创建的rng池实例
