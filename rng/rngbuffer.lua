@@ -12,14 +12,13 @@
 local _M = {}
 
 local log = require("lapis.logging")
-local bint = require("bint")(256)
 
 --- 读取n个chunk
 --- @public
---- @param n? bint 需要读取的chunk数量
+--- @param n? integer 需要读取的chunk数量
 --- @return string 读取到的数据
 function _M:read(n)
-    n = n or bint.frominteger(1)
+    n = n or 1
     if n > self.size then
         error("Rng buffer: requested chunks exceed buffer size")
     end

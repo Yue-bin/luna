@@ -2,19 +2,18 @@
 --- @class RngHelper
 local _M = {}
 
-local log = require("lapis.logging")
 local bint = require("bint")(256)
 local config = require("config")
 
 --- 计算生成指定范围内的随机数所需的chunk数
 --- 用于精确拒绝采样算法
 --- @param range bint 随机数范围
---- @return bint chunks 需要的chunk数
+--- @return integer chunks 需要的chunk数
 function _M.need_chunks(range)
     if range <= 1 then
-        return bint.zero()
+        return 0
     end
-    local chunks = bint.one()
+    local chunks = 1
     local bits_per_chunk = config.chunk_size * 8
     -- 计算需要多少个 chunk 才能覆盖 range
     -- 使用左移构造阈值 2^(chunks*bits_per_chunk)，避免右移导致 bint 降级为 number

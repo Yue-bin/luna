@@ -26,10 +26,10 @@ function _M.random_number(lower, upper)
     end
     log.notice("Generating random number between " .. tostring(lower) .. " and " .. tostring(upper))
     local need_chunks = helper.need_chunks(range)
-    if bint.iszero(need_chunks) then
+    if need_chunks == 0 then
         error("input out of range")
     end
-    local total_bytes = need_chunks * config.chunk_size
+    local total_bytes = bint.frominteger(need_chunks) * config.chunk_size
     local max_val = bint.one() << (total_bytes * 8) -- 2^(8*total_bytes)
     local limit = (max_val // range) * range        -- 安全区间上界
     local raw_random = nil
