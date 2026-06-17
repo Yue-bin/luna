@@ -35,6 +35,15 @@ app:get("/random/number", function(self)
   }
 end)
 
-
+app:get("/random/hex", function(self)
+  local length = math.tointeger(self.params.length) or 16
+  local pool = self.params.pool or default_pool
+  local random_hex = pools[pool]:random_hex(length)
+  return {
+    json = {
+      hex = random_hex,
+    },
+  }
+end)
 
 return app
