@@ -3,7 +3,6 @@
 local _M = {}
 
 local bint = require("bint")(256)
-local config = require("config")
 
 --- 计算生成指定范围内的随机数所需的chunk数
 --- 用于精确拒绝采样算法
